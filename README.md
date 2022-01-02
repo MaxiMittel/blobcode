@@ -18,7 +18,7 @@
   <p align="center">
     Desktop Grade Code Editor for iPadOS
     <br />
-    <a href="https://github.com/MaxiMittel/blobcode"><strong>Join the beta »</strong></a>
+    <a href="https://testflight.apple.com/join/BfMvw9Wf"><strong>Join the beta »</strong></a>
     <br />
     <br />
     <a href="https://github.com/MaxiMittel/blobcode">Watch Demo</a>
