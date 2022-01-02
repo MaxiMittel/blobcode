@@ -26,16 +26,13 @@ class FileSystemFileHandle extends FileSystemHandle {
                     info("Read file");
                     file = JSON.parse(file);
 
-                    b64toBlob(file.content, file.type)
+                    decodeBase64(file.content, file.type)
                         .then((contents) => {
                             info("File contents");
                             const jsFile = new File([contents], file.name, {
                                 lastModified: new Date(file.lastModified).getTime(),
                                 type: file.type,
                             });
-
-                            console.log(jsFile);
-
                             resolve(jsFile);
                         })
                         .catch((err) => { error("getFile:1 " + err); reject(err); });

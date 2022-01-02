@@ -117,6 +117,7 @@ class ViewController: UIViewController, WKScriptMessageHandlerWithReply, UIDocum
         
         webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15"
         webView.load(URLRequest(url: URL(string: "https://vscode.dev")!))
+        //webView.configuration.limitsNavigationsToAppBoundDomains = true // TODO: Implement App-Bound Domains (for Service workers)
         inject()
     }
     
@@ -179,29 +180,17 @@ class ViewController: UIViewController, WKScriptMessageHandlerWithReply, UIDocum
      - Parameter suggestedName: The name of the file to save.
      */
     func showSaveFilePicker(suggestedName: String){
-        //Present a UIAlert to enter the file name.
-        let alertController = UIAlertController(title: "Enter a file name", message: nil, preferredStyle: .alert)
-        let confirmAction = UIAlertAction(title: "Continue", style: .default) { (_) in
-            if let txtField = alertController.textFields?.first, let text = txtField.text {
-                //Present the picker to pick the save location.
-                do {
-                    //Create a temporary file and move it to the picked location.
-                    let fileURL = FileManager.default.temporaryDirectory.appendingPathComponent(text)
-                    try Data().write(to: fileURL)
-                    
-                    let documentPickerController = UIDocumentPickerViewController(forExporting: [fileURL])
-                    documentPickerController.delegate = self
-                    self.present(documentPickerController, animated: true, completion: nil)
-                } catch {
-                    logError(message: error)
-                }
-            }
+        //Create a temporary file and move it to the picked location.
+        do {
+            let fileURL = FileManager.default.temporaryDirectory.appendingPathComponent(suggestedName)
+            try Data().write(to: fileURL)
+            
+            let documentPickerController = UIDocumentPickerViewController(forExporting: [fileURL])
+            documentPickerController.delegate = self
+            self.present(documentPickerController, animated: true, completion: nil)
+        } catch {
+            logError(message: error)
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { [self] (_) in showOpenFilePickerCallback(nil, "Picker dismissed") }
-        alertController.addTextField { (textField) in textField.placeholder = suggestedName }
-        alertController.addAction(confirmAction)
-        alertController.addAction(cancelAction)
-        self.present(alertController, animated: true, completion: nil)
     }
     
     /**

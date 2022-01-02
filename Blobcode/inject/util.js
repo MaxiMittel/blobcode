@@ -35,9 +35,9 @@ const sendMessage = (action, data) => {
  * @param {*} base64 The base64 encoded file.
  * @returns A Promise which resolves to a Blob object.
  */
-const b64toBlob = (b64Data, contentType = "", sliceSize = 512) => {
+const decodeBase64 = (b64Data, contentType = "", sliceSize = 512) => {
     return new Promise((resolve, reject) => {
-        call("b64toBlob" + b64Data);
+        call("decodeBase64: " + b64Data + "Type: " + contentType);
         const byteCharacters = atob(b64Data);
         const byteArrays = [];
 

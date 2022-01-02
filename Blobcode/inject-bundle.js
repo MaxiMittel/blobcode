@@ -76,16 +76,13 @@ class FileSystemFileHandle extends FileSystemHandle {
                     info("Read file");
                     file = JSON.parse(file);
 
-                    b64toBlob(file.content, file.type)
+                    decodeBase64(file.content, file.type)
                         .then((contents) => {
                             info("File contents");
                             const jsFile = new File([contents], file.name, {
                                 lastModified: new Date(file.lastModified).getTime(),
                                 type: file.type,
                             });
-
-                            console.log(jsFile);
-
                             resolve(jsFile);
                         })
                         .catch((err) => { error("getFile:1 " + err); reject(err); });
@@ -556,9 +553,9 @@ const sendMessage = (action, data) => {
  * @param {*} base64 The base64 encoded file.
  * @returns A Promise which resolves to a Blob object.
  */
-const b64toBlob = (b64Data, contentType = "", sliceSize = 512) => {
+const decodeBase64 = (b64Data, contentType = "", sliceSize = 512) => {
     return new Promise((resolve, reject) => {
-        call("b64toBlob" + b64Data);
+        call("decodeBase64: " + b64Data + "Type: " + contentType);
         const byteCharacters = atob(b64Data);
         const byteArrays = [];
 
@@ -591,7 +588,8 @@ const encodeBase64 = (blob) => {
         reader.onloadend = () => resolve(reader.result);
         reader.readAsDataURL(blob);
     });
-}/**
+}
+/**
  * The showOpenFilePicker() method of the Window interface shows
  * a file picker that allows a user to select a file or multiple
  * files and returns a handle for the file(s).
